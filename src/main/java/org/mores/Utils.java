@@ -24,7 +24,7 @@ public class Utils {
 
     protected void effectLightingPlayer(Player player) {
         //给予玩家10秒的发光效果
-        PotionEffect glowEffect = new PotionEffect(PotionEffectType.GLOWING, 200, 1);
+        PotionEffect glowEffect = new PotionEffect(PotionEffectType.GLOWING, 200, 1,false);
         player.addPotionEffect(glowEffect);
     }
 
