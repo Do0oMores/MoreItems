@@ -34,8 +34,10 @@ public class handListener implements Listener {
         if (itemInHand.getType().equals(Material.FIREWORK_ROCKET) && playerAction.equals(Action.RIGHT_CLICK_BLOCK)) {
             // 玩家发射了烟花,检测发射烟花玩家20格内的玩家
             for (Entity entity : playerWorld.getNearbyEntities(playerLocation, 20, 20, 20)) {
-                //防止标记到使用者
-                if (entity.getType().equals(EntityType.PLAYER) && !entity.getName().equals(playerName)) {
+                String entityName = entity.getName();
+                boolean containsChinese = utils.containsChinese(entityName);
+                //防止标记到使用者和NPC
+                if (entity.getType().equals(EntityType.PLAYER) && !entity.getName().equals(playerName) && !containsChinese) {
                     nearPlayers.add((Player) entity);
                 }
             }

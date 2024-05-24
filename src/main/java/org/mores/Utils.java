@@ -4,12 +4,23 @@ import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
+import java.util.regex.Pattern;
+
 public class Utils {
+
+    /**
+     * 给玩家发送标记的actionbar
+     *
+     * @param player 被标记的玩家
+     * @param sender 使用标记的玩家
+     */
     protected void SendActionBar(Player player, Player sender) {
         String playerName = player.getName();
         TextComponent actionbarText = new TextComponent(ChatColor.DARK_GREEN + "已标记:" + ChatColor.DARK_RED + playerName);
@@ -22,15 +33,74 @@ public class Utils {
         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, playerActionbarText);
     }
 
+    /**
+     * 给玩家发光效果
+     *
+     * @param player 给予效果的玩家
+     */
     protected void effectLightingPlayer(Player player) {
         //给予玩家10秒的发光效果
-        PotionEffect glowEffect = new PotionEffect(PotionEffectType.GLOWING, 200, 1,false);
+        PotionEffect glowEffect = new PotionEffect(PotionEffectType.GLOWING, 200, 1, true);
         player.addPotionEffect(glowEffect);
     }
 
+    /**
+     * 获取玩家所在的队伍
+     *
+     * @param player 需要获取队伍的玩家
+     * @return 玩家所在的队伍
+     */
     protected Team getPlayerTeam(Player player) {
         String playerName = player.getName();
         Scoreboard scoreboard = player.getScoreboard();
         return scoreboard.getEntryTeam(playerName);
     }
+
+    /**
+     * 中文字符检查
+     * @param str 字符串
+     * @return 是否包含中文字符
+     */
+    protected boolean containsChinese(String str){
+        Pattern pattern=Pattern.compile("[\u4e00-\u9fa5]");
+        return pattern.matcher(str).find();
+    }
+
+
+//    /**
+//     * 构建进度条
+//     *
+//     * @param current   目前的进度
+//     * @param max       最大进度
+//     * @param totalBars 进度条的总长度
+//     * @param itemStack 玩家手上的物品
+//     * @return 进度条文本
+//     */
+//    protected String setProgressBar(int current, int max, int totalBars, ItemStack itemStack) {
+//        float percent = (float) current / max;
+//        int progressBars = (int) (totalBars * percent);
+//        ItemMeta itemMeta = itemStack.getItemMeta();
+//        String itemName = null;
+//        if (itemMeta != null) {
+//            itemName = itemMeta.getDisplayName();
+//        }
+//        StringBuilder stringBuilder = new StringBuilder();
+//        String diyText = "正在使用:";
+//        stringBuilder.append(ChatColor.DARK_PURPLE);
+//        stringBuilder.append(diyText);
+//        stringBuilder.append(ChatColor.GOLD);
+//        stringBuilder.append(itemName);
+//        stringBuilder.append(ChatColor.DARK_GREEN);
+//        for (int i = 0; i < progressBars; i++) {
+//            stringBuilder.append("■");
+//        }
+//        stringBuilder.append(ChatColor.WHITE);
+//        for (int i = progressBars; i < totalBars; i++) {
+//            stringBuilder.append("□");
+//        }
+//        return stringBuilder.toString();
+//    }
+//
+
+
 }
