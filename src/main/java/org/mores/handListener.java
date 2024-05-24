@@ -11,6 +11,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scoreboard.Team;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,21 +28,28 @@ public class handListener implements Listener {
         World playerWorld = player.getWorld();
         List<Player> nearPlayers = new ArrayList<>();
         ItemStack itemInHand = player.getInventory().getItemInMainHand();
+        //获取使用者的队伍
+        Team team = utils.getPlayerTeam(player);
         //判断玩家是否右键烟花火箭
         if (itemInHand.getType().equals(Material.FIREWORK_ROCKET) && playerAction.equals(Action.RIGHT_CLICK_BLOCK)) {
             // 玩家发射了烟花,检测发射烟花玩家10格内的玩家
             for (Entity entity : playerWorld.getNearbyEntities(playerLocation, 10, 10, 10)) {
+                //防止标记到使用者
                 if (entity.getType().equals(EntityType.PLAYER) && !entity.getName().equals(playerName)) {
                     nearPlayers.add((Player) entity);
                 }
             }
-            //遍历附近10格内的玩家
-            if (!nearPlayers.isEmpty()) {
-                for (Player player1 : nearPlayers) {
-                    //对玩家进行操作
+        }
+        //遍历附近10格内的玩家
+        if (!nearPlayers.isEmpty()) {
+            for (Player player1 : nearPlayers) {
+                //对玩家进行操作,排除队友
+                Team playerTeam = utils.getPlayerTeam(player1);
+                if (!playerTeam.equals(team)) {
                     utils.effectLightingPlayer(player1);
                     utils.SendActionBar(player1, player);
-                }
+                } else return;
+
             }
         }
 
