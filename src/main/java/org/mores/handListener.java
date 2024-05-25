@@ -26,40 +26,45 @@ public class handListener implements Listener {
         Action playerAction = event.getAction();
         Location playerLocation = player.getLocation();
         World playerWorld = player.getWorld();
-        List<Player> nearPlayers = new ArrayList<>();
         ItemStack itemInHand = player.getInventory().getItemInMainHand();
-        //获取使用者的队伍
-        Team team = utils.getPlayerTeam(player);
-        //判断玩家是否右键烟花火箭
+
+        // 判断玩家是否右键烟花火箭
         if (itemInHand.getType().equals(Material.FIREWORK_ROCKET) && playerAction.equals(Action.RIGHT_CLICK_BLOCK)) {
-            // 玩家发射了烟花,检测发射烟花玩家20格内的玩家
+            List<Player> nearPlayers = new ArrayList<>();
+            List<Player> lightingPlayers = new ArrayList<>();
+
+            // 获取使用者的队伍
+            Team team = utils.getPlayerTeam(player);
+
+            // 检测发射烟花玩家20格内的玩家
             for (Entity entity : playerWorld.getNearbyEntities(playerLocation, 20, 20, 20)) {
-                String entityName = entity.getName();
-                boolean containsChinese = utils.containsChinese(entityName);
-                //防止标记到使用者和NPC
-                if (entity.getType().equals(EntityType.PLAYER) && !entity.getName().equals(playerName) && !containsChinese) {
-                    nearPlayers.add((Player) entity);
+                if (entity.getType().equals(EntityType.PLAYER)) {
+                    Player nearPlayer = (Player) entity;
+                    String entityName = nearPlayer.getName();
+                    boolean containsChinese = utils.containsChinese(entityName);
+
+                    // 防止标记到使用者和NPC
+                    if (!nearPlayer.getName().equals(playerName) && !containsChinese) {
+                        nearPlayers.add(nearPlayer);
+                    }
                 }
             }
-        }
-        //遍历附近的玩家
-        if (!nearPlayers.isEmpty()) {
-            for (Player player1 : nearPlayers) {
-                //对玩家进行操作,排除队友
-                Team playerTeam = utils.getPlayerTeam(player1);
-                //增加空队伍判断
-                //如果有队伍则排除队友
-                if (team != null && playerTeam != null) {
-                    if (!playerTeam.equals(team)) {
-                        utils.effectLightingPlayer(player1);
-                        utils.SendActionBar(player1, player);
-                    } else return;
-                    //没有队伍就全部标记
-                } else {
-                    utils.effectLightingPlayer(player1);
-                    utils.SendActionBar(player1, player);
+
+            // 遍历附近的玩家
+            for (Player nearPlayer : nearPlayers) {
+                Team playerTeam = utils.getPlayerTeam(nearPlayer);
+
+                if ((team != null && playerTeam != null && !playerTeam.equals(team)) || team == null || playerTeam == null) {
+                    lightingPlayers.add(nearPlayer);
+                    utils.effectLightingPlayer(nearPlayer);
                 }
+            }
+
+            // 发送提示信息
+            if (!lightingPlayers.isEmpty()) {
+                utils.SendActionBar(lightingPlayers, player);
             }
         }
     }
+
 }
