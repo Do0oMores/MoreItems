@@ -82,41 +82,40 @@ public class Utils {
         return pattern.matcher(str).find();
     }
 
+    /**
+     * 构建进度条
+     *
+     * @param current   目前的进度
+     * @param max       最大进度
+     * @param totalBars 进度条的总长度
+     * @param itemStack 玩家手上的物品
+     * @return 进度条文本
+     */
+    protected String setProgressBar(int current, int max, int totalBars, ItemStack itemStack) {
+        float percent = (float) current / max;
+        int progressBars = (int) (totalBars * percent);
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        String itemName = null;
+        if (itemMeta != null) {
+            itemName = itemMeta.getDisplayName();
+        }
+        StringBuilder stringBuilder = new StringBuilder();
+        String diyText = "正在使用:";
+        stringBuilder.append(ChatColor.DARK_PURPLE);
+        stringBuilder.append(diyText);
+        stringBuilder.append(ChatColor.GOLD);
+        stringBuilder.append(itemName);
+        stringBuilder.append(ChatColor.DARK_GREEN);
+        for (int i = 0; i < progressBars; i++) {
+            stringBuilder.append("■");
+        }
+        stringBuilder.append(ChatColor.WHITE);
+        for (int i = progressBars; i < totalBars; i++) {
+            stringBuilder.append("□");
+        }
+        return stringBuilder.toString();
+    }
 
-//    /**
-//     * 构建进度条
-//     *
-//     * @param current   目前的进度
-//     * @param max       最大进度
-//     * @param totalBars 进度条的总长度
-//     * @param itemStack 玩家手上的物品
-//     * @return 进度条文本
-//     */
-//    protected String setProgressBar(int current, int max, int totalBars, ItemStack itemStack) {
-//        float percent = (float) current / max;
-//        int progressBars = (int) (totalBars * percent);
-//        ItemMeta itemMeta = itemStack.getItemMeta();
-//        String itemName = null;
-//        if (itemMeta != null) {
-//            itemName = itemMeta.getDisplayName();
-//        }
-//        StringBuilder stringBuilder = new StringBuilder();
-//        String diyText = "正在使用:";
-//        stringBuilder.append(ChatColor.DARK_PURPLE);
-//        stringBuilder.append(diyText);
-//        stringBuilder.append(ChatColor.GOLD);
-//        stringBuilder.append(itemName);
-//        stringBuilder.append(ChatColor.DARK_GREEN);
-//        for (int i = 0; i < progressBars; i++) {
-//            stringBuilder.append("■");
-//        }
-//        stringBuilder.append(ChatColor.WHITE);
-//        for (int i = progressBars; i < totalBars; i++) {
-//            stringBuilder.append("□");
-//        }
-//        return stringBuilder.toString();
-//    }
-//
 
 
 }

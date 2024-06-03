@@ -9,12 +9,13 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class moreItems extends JavaPlugin {
     Utils utils = new Utils();
+    healthPack healthPack=new healthPack();
 
     @Override
     public void onEnable() {
-        handListener Listener = new handListener();
         //注册监听器
-        getServer().getPluginManager().registerEvents(Listener, this);
+        getServer().getPluginManager().registerEvents(new handListener(), this);
+        getServer().getPluginManager().registerEvents(new healthPack(),this);
         getLogger().info("Enabled");
     }
 
@@ -23,22 +24,29 @@ public class moreItems extends JavaPlugin {
         getLogger().info("Disabled");
     }
 
-//    protected void startProgressBar(Player player, int maxProgress, int totalBars, Runnable onComplete, ItemStack itemStack) {
-//        new BukkitRunnable() {
-//            int progress = 0;
-//
-//            @Override
-//            public void run() {
-//                if (progress > maxProgress) {
-//                    this.cancel();
-//                    onComplete.run();
-//                }
-//                String progressBar = utils.setProgressBar(progress, maxProgress, totalBars, itemStack);
-//                player.spigot().sendMessage(ChatMessageType.ACTION_BAR,
-//                        TextComponent.fromLegacyText(progressBar));
-//                progress++;
-//            }
-//            //20tick(1秒)执行一次
-//        }.runTaskTimer(this, 0, 20);
-//    }
+
+    protected void startProgressBar(Player player, int maxProgress, int totalBars, Runnable onComplete, ItemStack itemStack, long holdTime) {
+        new BukkitRunnable() {
+            int progress = 0;
+
+            @Override
+            public void run() {
+                if (healthPack.rightClickStartTimes.containsKey(player)) {
+                    long duration = System.currentTimeMillis() - healthPack.rightClickStartTimes.get(player);
+                    if (duration >= holdTime) {
+                        this.cancel();
+                        onComplete.run();
+                        healthPack.rightClickStartTimes.remove(player);
+                    } else {
+                        progress = (int) (duration * maxProgress / holdTime);
+                        String progressBar = utils.setProgressBar(progress, maxProgress, totalBars, itemStack);
+                        player.spigot().sendMessage(ChatMessageType.ACTION_BAR,
+                                TextComponent.fromLegacyText(progressBar));
+                    }
+                } else {
+                    this.cancel();
+                }
+            }
+        }.runTaskTimerAsynchronously(this, 0, 20);
+    }
 }
