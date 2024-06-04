@@ -1,0 +1,9 @@
+SmallHealthPack:
+  Health: 25
+  UseTime: 5
+MediumHealthPack:
+  Health: 50
+  UseTime: 10
+LargeHealthPack:
+  Health: 75
+  UseTime: 15

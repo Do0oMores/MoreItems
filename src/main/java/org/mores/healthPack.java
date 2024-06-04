@@ -21,44 +21,39 @@ public class healthPack implements Listener {
 
     protected final Map<Player, Long> rightClickStartTimes = new ConcurrentHashMap<>();
 
+    Integer smallHealth=moreItems.config.getInt("SmallHealthPack.Health");
+    Integer smallUseTime=moreItems.config.getInt("SmallHealthPack.UseTime");
+    Integer mediumHealth=moreItems.config.getInt("MediumHealthPack.Health");
+    Integer mediumUseTime=moreItems.config.getInt("MediumHealthPack.UseTime");
+    Integer largeHealth=moreItems.config.getInt("LargeHealthPack.Health");
+    Integer largeUseTime=moreItems.config.getInt("LargeHealthPack.UseTime");
+
+    //构建回血包物品
+    private ItemStack HealthPackShow(Integer health,Integer useTime,String itemName){
+        ItemStack healthPack=new ItemStack(Material.BOOK);
+        ItemMeta healthPackMeta=healthPack.getItemMeta();
+        assert healthPackMeta!=null;
+        healthPackMeta.setDisplayName(itemName);
+        List<String> healthPackLore=new ArrayList<>();
+        healthPackLore.add(ChatColor.DARK_PURPLE+"右键回复"+health+"点血量");
+        healthPackLore.add(ChatColor.COLOR_CHAR+"o"+ChatColor.RED+"使用时间："+useTime+"秒");
+        healthPackMeta.setLore(healthPackLore);
+        return healthPack;
+    }
+
     //小型回血包(绷带)
     protected ItemStack getSmallHealthPack(){
-        //定义回血包
-        ItemStack healthPack=new ItemStack(Material.BOOK);
-        ItemMeta healthPackMeta= healthPack.getItemMeta();
-        assert healthPackMeta != null;
-        healthPackMeta.setDisplayName(ChatColor.GREEN+"小型回血包");
-        List<String> smallHealthPackLore=new ArrayList<>();
-        smallHealthPackLore.add(ChatColor.DARK_PURPLE+"右键回复25点血量");
-        smallHealthPackLore.add(ChatColor.COLOR_CHAR+"o"+ChatColor.RED+"使用时间：5秒");
-        healthPackMeta.setLore(smallHealthPackLore);
-        return healthPack;
+        return HealthPackShow(smallHealth,smallUseTime,ChatColor.GREEN+"小型回血包");
     }
 
     //中型回血包(医疗包)
     protected ItemStack getMediumHealthPack(){
-        ItemStack healthPack=new ItemStack(Material.BOOK);
-        ItemMeta healthPackMeta= healthPack.getItemMeta();
-        assert healthPackMeta != null;
-        healthPackMeta.setDisplayName(ChatColor.DARK_BLUE+"中型回血包");
-        List<String> mediumHealthPackLore=new ArrayList<>();
-        mediumHealthPackLore.add(ChatColor.DARK_PURPLE+"右键回复50点血量");
-        mediumHealthPackLore.add(ChatColor.COLOR_CHAR+"o"+ChatColor.RED+"使用时间：10秒");
-        healthPackMeta.setLore(mediumHealthPackLore);
-        return healthPack;
+        return HealthPackShow(mediumHealth,mediumUseTime,ChatColor.BLUE+"中型回血包");
     }
 
     //大型回血包(医疗箱)
     protected ItemStack getLargeHealthPack(){
-        ItemStack healthPack=new ItemStack(Material.BOOK);
-        ItemMeta healthPackMeta= healthPack.getItemMeta();
-        assert healthPackMeta != null;
-        healthPackMeta.setDisplayName(ChatColor.GOLD+"大型回血包");
-        List<String> largeHealthPackLore=new ArrayList<>();
-        largeHealthPackLore.add(ChatColor.DARK_PURPLE+"右键回复75点血量");
-        largeHealthPackLore.add(ChatColor.COLOR_CHAR+"o"+ChatColor.RED+"使用时间：15秒");
-        healthPackMeta.setLore(largeHealthPackLore);
-        return healthPack;
+        return HealthPackShow(largeHealth,largeUseTime,ChatColor.GOLD+"大型回血包");
     }
 
     @EventHandler
