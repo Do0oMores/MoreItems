@@ -25,17 +25,17 @@ public class Utils {
      * @param sender     使用标记的玩家
      */
     protected void SendActionBar(List<Player> playerList, Player sender) {
-        ComponentBuilder builder=new ComponentBuilder();
+        ComponentBuilder builder = new ComponentBuilder();
         //被标记提示
         TextComponent playerActionbarText = new TextComponent(ChatColor.DARK_RED + "你已被标记！");
         playerActionbarText.setItalic(true);
         playerActionbarText.setUnderlined(true);
-        TextComponent actionbarText=new TextComponent(ChatColor.DARK_GREEN+"已标记: ");
+        TextComponent actionbarText = new TextComponent(ChatColor.DARK_GREEN + "已标记: ");
         actionbarText.setItalic(true);
         builder.append(actionbarText);
         for (Player player1 : playerList) {
             String playerName = player1.getName();
-            TextComponent playerNameList=new TextComponent(playerName);
+            TextComponent playerNameList = new TextComponent(playerName);
             playerNameList.setColor(ChatColor.RED);
             playerNameList.setBold(true);
             playerNameList.addExtra("|");
@@ -44,7 +44,7 @@ public class Utils {
             player1.spigot().sendMessage(ChatMessageType.ACTION_BAR, playerActionbarText);
         }
         //标记提示
-        BaseComponent[] text= builder.create();
+        BaseComponent[] text = builder.create();
         sender.spigot().sendMessage(ChatMessageType.ACTION_BAR, text);
     }
 
@@ -87,13 +87,12 @@ public class Utils {
      *
      * @param current   目前的进度
      * @param max       最大进度
-     * @param totalBars 进度条的总长度
      * @param itemStack 玩家手上的物品
      * @return 进度条文本
      */
-    protected String setProgressBar(int current, int max, int totalBars, ItemStack itemStack) {
+    protected String setProgressBar(int current, int max, ItemStack itemStack) {
         float percent = (float) current / max;
-        int progressBars = (int) (totalBars * percent);
+        int progressBars = (int) (10 * percent);
         ItemMeta itemMeta = itemStack.getItemMeta();
         String itemName = null;
         if (itemMeta != null) {
@@ -110,7 +109,7 @@ public class Utils {
             stringBuilder.append("■");
         }
         stringBuilder.append(ChatColor.WHITE);
-        for (int i = progressBars; i < totalBars; i++) {
+        for (int i = progressBars; i < 10; i++) {
             stringBuilder.append("□");
         }
         return stringBuilder.toString();

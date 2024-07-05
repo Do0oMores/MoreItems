@@ -3,3 +3,7 @@ version: 1.0.1
 main: org.mores.moreItems
 api-version: 1.16
 author: Mores
+commands:
+  gethealthpack:
+    description: Get a health pack
+    usage: /<command> <small|medium|large>

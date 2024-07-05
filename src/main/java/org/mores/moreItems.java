@@ -9,11 +9,17 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
+import java.util.Objects;
 
 public class moreItems extends JavaPlugin {
+    public static moreItems instance;
     public FileConfiguration config;
-    Utils utils = new Utils();
-    healthPack healthPack=new healthPack();
+
+    static Utils utils = new Utils();
+
+    static Integer smallHoldTime;
+    static Integer mediumHoldTime;
+    static Integer largeHoldTime;
 
     @Override
     public void onEnable() {
@@ -21,7 +27,9 @@ public class moreItems extends JavaPlugin {
         loadConfig();
         //注册监听器
         getServer().getPluginManager().registerEvents(new handListener(), this);
-        getServer().getPluginManager().registerEvents(new healthPack(),this);
+        getServer().getPluginManager().registerEvents(new healthPack(this), this);
+        //注册指令
+        Objects.requireNonNull(this.getCommand("gethealthpack")).setExecutor(new MoreItemsCommand());
         getLogger().info("Enabled");
     }
 
@@ -30,7 +38,21 @@ public class moreItems extends JavaPlugin {
         getLogger().info("Disabled");
     }
 
-    protected void startProgressBar(Player player, int maxProgress, int totalBars, Runnable onComplete, ItemStack itemStack, long holdTime) {
+    protected static void startProgressBar(Player player, Runnable onComplete, ItemStack itemStack) {
+        int holdTime;
+        int maxProgress;
+        if (itemStack.equals(healthPack.getSmallHealthPack())) {
+            holdTime = smallHoldTime;
+            maxProgress = smallHoldTime;
+        } else if (itemStack.equals(healthPack.getMediumHealthPack())) {
+            holdTime = mediumHoldTime;
+            maxProgress = mediumHoldTime;
+        } else if (itemStack.equals(healthPack.getLargeHealthPack())) {
+            holdTime = largeHoldTime;
+            maxProgress = largeHoldTime;
+        } else {
+            throw new IllegalArgumentException("Invalid health pack");
+        }
         new BukkitRunnable() {
             int progress = 0;
 
@@ -44,7 +66,7 @@ public class moreItems extends JavaPlugin {
                         healthPack.rightClickStartTimes.remove(player);
                     } else {
                         progress = (int) (duration * maxProgress / holdTime);
-                        String progressBar = utils.setProgressBar(progress, maxProgress, totalBars, itemStack);
+                        String progressBar = utils.setProgressBar(progress, maxProgress, itemStack);
                         player.spigot().sendMessage(ChatMessageType.ACTION_BAR,
                                 TextComponent.fromLegacyText(progressBar));
                     }
@@ -52,14 +74,22 @@ public class moreItems extends JavaPlugin {
                     this.cancel();
                 }
             }
-        }.runTaskTimerAsynchronously(this, 0, 20);
+        }.runTaskTimerAsynchronously(getInstance(), 0, 20);
     }
 
-    private void loadConfig(){
-        File configFile=new File(getDataFolder(),"config.yml");
-        if (!configFile.exists()){
-            saveResource("config.yml",false);
+    private void loadConfig() {
+        File configFile = new File(getDataFolder(), "config.yml");
+        if (!configFile.exists()) {
+            saveResource("config.yml", false);
         }
-        config=getConfig();
+        config = getConfig();
+        // 获取配置值
+        smallHoldTime = config.getInt("SmallHealthPack.UseTime");
+        mediumHoldTime = config.getInt("MediumHealthPack.UseTime");
+        largeHoldTime = config.getInt("LargeHealthPack.UseTime");
+    }
+
+    public static moreItems getInstance(){
+        return instance;
     }
 }
