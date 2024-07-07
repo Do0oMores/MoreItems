@@ -1,9 +1,6 @@
-SmallHealthPack:
-  Health: 25
-  UseTime: 5
-MediumHealthPack:
-  Health: 50
-  UseTime: 10
-LargeHealthPack:
-  Health: 75
-  UseTime: 15
+回血包:
+  回血量: 5
+  回血间隔: 1
+回血箱:
+  回血量: 10
+  回血间隔: 1

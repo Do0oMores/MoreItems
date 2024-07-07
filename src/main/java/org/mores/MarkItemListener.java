@@ -16,7 +16,7 @@ import org.bukkit.scoreboard.Team;
 import java.util.ArrayList;
 import java.util.List;
 
-public class handListener implements Listener {
+public class MarkItemListener implements Listener {
     Utils utils = new Utils();
 
     @EventHandler

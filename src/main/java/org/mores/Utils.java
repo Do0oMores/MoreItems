@@ -6,8 +6,6 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.Scoreboard;
@@ -80,38 +78,5 @@ public class Utils {
     protected boolean containsChinese(String str) {
         Pattern pattern = Pattern.compile("[\u4e00-\u9fa5]");
         return pattern.matcher(str).find();
-    }
-
-    /**
-     * 构建进度条
-     *
-     * @param current   目前的进度
-     * @param max       最大进度
-     * @param itemStack 玩家手上的物品
-     * @return 进度条文本
-     */
-    protected String setProgressBar(int current, int max, ItemStack itemStack) {
-        float percent = (float) current / max;
-        int progressBars = (int) (10 * percent);
-        ItemMeta itemMeta = itemStack.getItemMeta();
-        String itemName = null;
-        if (itemMeta != null) {
-            itemName = itemMeta.getDisplayName();
-        }
-        StringBuilder stringBuilder = new StringBuilder();
-        String diyText = "正在使用:";
-        stringBuilder.append(ChatColor.DARK_PURPLE);
-        stringBuilder.append(diyText);
-        stringBuilder.append(ChatColor.GOLD);
-        stringBuilder.append(itemName);
-        stringBuilder.append(ChatColor.DARK_GREEN);
-        for (int i = 0; i < progressBars; i++) {
-            stringBuilder.append("■");
-        }
-        stringBuilder.append(ChatColor.WHITE);
-        for (int i = progressBars; i < 10; i++) {
-            stringBuilder.append("□");
-        }
-        return stringBuilder.toString();
     }
 }
