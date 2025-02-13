@@ -12,7 +12,7 @@ public class HealthPackCommand implements CommandExecutor {
     public boolean onCommand(CommandSender commandSender, org.bukkit.command.Command command, String s, String[] args) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
-            if (args.length == 1) {
+            if (player.isOp()&&args.length == 1) {
                 String type = args[0].toLowerCase();
                 ItemStack healthPack;
                 switch (type) {
